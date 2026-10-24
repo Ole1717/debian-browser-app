@@ -1,6 +1,13 @@
 #!/usr/bin/make -f
 
-export DH_VERBOSE = 1
+export PYTHON=python3
 
 %:
-	dh $@ --with python3
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	python3 setup.py install --root=debian/browser-app --install-layout=deb
+	install -d debian/browser-app/usr/bin
+	install -m 0755 script/browser-app debian/browser-app/usr/bin/browser-app
+	install -d debian/browser-app/usr/share/applications
+	install -m 0644 browser-app.desktop debian/browser-app/usr/share/applications/browser-app.desktop
